@@ -1,0 +1,1 @@
+{"Nodes:":[{"key:":0,"geo_location:":"0.0,0.0,0.0"},{"key:":1,"geo_location:":"0.0,0.0,0.0"},{"key:":2,"geo_location:":"0.0,0.0,0.0"},{"key:":3,"geo_location:":"0.0,0.0,0.0"}],"Edges:":[{"src:":0,"dest:":1,"weight:":0.0},{"src:":1,"dest:":2,"weight:":0.0},{"src:":2,"dest:":0,"weight:":0.0}]}
