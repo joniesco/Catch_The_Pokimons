@@ -1,4 +1,4 @@
-EX_2:
+# EX_2:
 public class NodeData implements node_data {
 This  class represents a node_data which is a vertex in a weighted-directed  graph that contains few fields:  key, info ,geo location, weight and tag. Each node can have  vertices “neighbors” which means there are weighted edges(a unergative weight) that connect it to each one of these vertices .
 The fields of this class are:
@@ -8,7 +8,7 @@ The fields of this class are:
 - weight (double ):  represent the weight of the node
 - Info (String): Represent the info (meta data) of the no
 - Tag (int): A temp variable, can be used for some markings and calculation of algorithms.
-Methods:
+### Methods:
 -get (for all the fields)
 -set(for all the fields)
 -to string(key and tag)
@@ -26,7 +26,7 @@ Methods:
 -to string(src,dst and weight)
 -equals(checking if two edges are the same by src , dest and weight)  
 
-public class DS_DWGraph implements directed_weighted_graph:
+### public class DS_DWGraph implements directed_weighted_graph:
 This class represents an directed, weighted   graph, which is a collection of nodes/vertex, the nodes can be connected to each other, but not necessarily.each edge has source dest and weight  
 The fields of this class are:
 - MyNodes (HashMap<Integer, node_data>): A HashMap of data nodes which represent our graph, in form of node_key -> node_data.
@@ -37,7 +37,7 @@ The fields of this class are:
 Methods:
 Adding/removing a node to/from the graph, connecting between nodes (by weighted edge and by source-dest ) in the graph. Get size (num of nodes), specific node, MC, list of graph’s nodes and list of neighbors. Also, getEdge which give us information about the edge between nodes. removing a edge from the graph. The function equals chek if tow graph are equals by they struct and there information..
 
-Class Graph_Algo implements graph_algorithms
+### Class Graph_Algo implements graph_algorithms
 
 This class represents some algorithms on the graph that will help us to get some information.
 The fields of this class are:
@@ -55,7 +55,7 @@ The method will retrieve the size of the path between a given source and destina
 
 
 
-runDijkstraAlgo:
+#### runDijkstraAlgo:
 
 Helping data structure: priorityqueue, HashMap<Integer, WGraph_DS.Node_info> prev
  
