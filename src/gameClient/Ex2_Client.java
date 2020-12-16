@@ -7,10 +7,7 @@ import api.game_service;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 //import static sun.net.www.protocol.http.AuthCacheValue.Type.Server;
 
@@ -25,14 +22,14 @@ public class Ex2_Client implements Runnable{
 	
 	@Override
 	public void run() {
-		int scenario_num = 11;
+		int scenario_num = 2;
 		game_service game = Game_Server_Ex2.getServer(scenario_num); // you have [0,23] games
 	//	int id = 999;
 	//	game.login(id);
 		String g = game.getGraph();
 		String pks = game.getPokemons();
 		directed_weighted_graph gg = game.getJava_Graph_Not_to_be_used();
-		init(game);
+		init(game,gg);
 		
 		game.startGame();
 
@@ -100,10 +97,10 @@ public class Ex2_Client implements Runnable{
 		ans = itr.next().getDest();
 		return ans;
 	}
-	private void init(game_service game) {
+	private void init(game_service game,directed_weighted_graph graph) {
 		String g = game.getGraph();
 		String fs = game.getPokemons();
-		directed_weighted_graph gg = game.getJava_Graph_Not_to_be_used();
+		directed_weighted_graph gg = graph;
 		//gg.init(g);
 		_ar = new Arena();
 		_ar.setGraph(gg);
@@ -111,7 +108,7 @@ public class Ex2_Client implements Runnable{
 		_win = new MyFrame(_ar);
 		_win.setSize(1000, 700);
 
-	
+
 		_win.show();
 		String info = game.toString();
 		JSONObject line;
@@ -122,15 +119,30 @@ public class Ex2_Client implements Runnable{
 			System.out.println(info);
 			System.out.println(game.getPokemons());
 			int src_node = 0;  // arbitrary node, you should start at one of the pokemon
-			ArrayList<CL_Pokemon> cl_fs = Arena.json2Pokemons(game.getPokemons());
-			for(int a = 0;a<cl_fs.size();a++) { Arena.updateEdge(cl_fs.get(a),gg);}
-			for(int a = 0;a<rs;a++) {
-				int ind = a%cl_fs.size();
-				CL_Pokemon c = cl_fs.get(ind);
-				int nn = c.get_edge().getDest();
-				if(c.getType()<0 ) {nn = c.get_edge().getSrc();}
 
-				game.addAgent(nn);
+			ArrayList<CL_Pokemon> cl_fs = Arena.json2Pokemons(game.getPokemons());
+
+
+			for(int a = 0;a<cl_fs.size();a++) {
+				Arena.updateEdge(cl_fs.get(a),gg);}
+
+//            for (CL_Pokemon pk :cl_fs)
+//                System.out.println(pk.get_edge());
+
+			Comparator<CL_Pokemon> comparator= new Comparator<CL_Pokemon>() {
+				@Override
+				public int compare(CL_Pokemon o1, CL_Pokemon o2) {
+					return Double.compare(o2.getValue(),o1.getValue());
+				}
+			};
+
+			cl_fs.sort(comparator);
+
+			for(int a = 0;a<rs;a++) {
+				int nodeLocation=cl_fs.get(a).get_edge().getSrc();
+				game.addAgent(nodeLocation);
+
+
 			}
 		}
 		catch (JSONException e) {e.printStackTrace();}

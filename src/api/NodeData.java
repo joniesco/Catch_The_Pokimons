@@ -4,17 +4,18 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class NodeData implements node_data {
-    private int key;
-   private double weight;
-    private  geo_location g;
-   private int tag;
-    private String info;
+    private int key;//will represent the key of the node
+   private double weight;//will represent the weight of the node
+    private  geo_location g;//will represent the geo location of the node
+   private int tag;//will represent the tag of the node
+    private String info;//will represent the info of the node
 
+    //constructor
     public NodeData(int key) {
         this.key = key;
         this.g=new GeoLocation(0,0,0);
     }
-
+//copy constructor
     public NodeData(node_data other) {
         this.key=other.getKey();
         this.weight=other.getWeight();
@@ -24,7 +25,7 @@ public class NodeData implements node_data {
 
 
     }
-
+//getters,setters,to string and equal methods:
     @Override
     public int getKey() {
         return this.key;

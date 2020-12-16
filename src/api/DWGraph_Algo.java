@@ -5,11 +5,11 @@ import java.util.*;
 import com.google.gson.*;
 
 public class DWGraph_Algo implements dw_graph_algorithms {
-    directed_weighted_graph myGraph;
+    directed_weighted_graph myGraph;// our graph we will work with for the algorithms
 
     public DWGraph_Algo() {
         myGraph=new DS_DWGraph();
-    }
+    }//constructor
 
     @Override
     public void init(directed_weighted_graph g) {
@@ -25,27 +25,28 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     public directed_weighted_graph copy() {
         return new DS_DWGraph(myGraph);
     }
-
-    public directed_weighted_graph transpose(){
-        DS_DWGraph transpose= new DS_DWGraph();
-        for (node_data n:myGraph.getV())
-            {
-                transpose.addNode(new NodeData(n.getKey()));
+    //helper method which transpose a graph ( changing dest to source and source to dest in the edges)
+    public directed_weighted_graph transpose() {
+        DS_DWGraph transpose = new DS_DWGraph();
+        for (node_data n : myGraph.getV()) {
+            transpose.addNode(new NodeData(n.getKey()));//first we add the ndes
         }
-        for(node_data n:myGraph.getV()){
-            for (edge_data e:myGraph.getE(n.getKey())) {
-                transpose.connect(e.getDest(),e.getSrc(),e.getWeight());
+        for (node_data n : myGraph.getV()) {
+            for (edge_data e : myGraph.getE(n.getKey())) {
+                transpose.connect(e.getDest(), e.getSrc(), e.getWeight());//src=dest,dest=src in the transpose graph)
             }
         }
         return transpose;
     }
 
+    //set tags to 0
     private void setTags(Collection<node_data> nodeList) {
         for (node_data node : nodeList) {
             node.setTag(0);
         }
     }
 
+    // implements the Dfs algorithms - using on transpose graph
     public void DFS(node_data n,Set<node_data> component,directed_weighted_graph transpose){
         n.setTag(1);
              component.add(n);
@@ -56,6 +57,7 @@ public class DWGraph_Algo implements dw_graph_algorithms {
         }
     }
 
+    // implements the Dfs algorithms - using on the original  graph
     public void fillOrder(node_data n, Stack<node_data> stack){
         n.setTag(1);
         for(edge_data e : myGraph.getE(n.getKey()) ){
@@ -66,25 +68,25 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     }
 
     @Override
+    //this method checks if a graph is strongly connected by using a transpose graph and comparing the components
     public boolean isConnected() {
         Stack<node_data> stack =new Stack();
-        setTags(myGraph.getV());
+        setTags(myGraph.getV());//set tags to 0
 
         directed_weighted_graph transpose = transpose();
-        setTags(transpose.getV());
+        setTags(transpose.getV());//set tags to 0
 
         for (node_data n:myGraph.getV()) {
             if (myGraph.getNode(n.getKey()).getTag()==0)
-                fillOrder(n,stack);
+                fillOrder(n,stack);//run dfs while there are still unvisited vertex
         }
 
-      //  System.out.println(stack);
 
         Set<Set<node_data>> components= new HashSet<>();
 
         while (!stack.isEmpty()){
             node_data current = transpose.getNode(stack.pop().getKey());
-            if(current.getTag()==0){
+            if(current.getTag()==0){//unvisited vertex
                 Set<node_data> currentComponent= new HashSet<>();
                 DFS(current,currentComponent,transpose);
                 components.add(currentComponent);
@@ -92,7 +94,6 @@ public class DWGraph_Algo implements dw_graph_algorithms {
             }
         }
 
-       // System.out.println(components);
         return components.size()<=1;
     }
 
@@ -202,19 +203,19 @@ public class DWGraph_Algo implements dw_graph_algorithms {
         JsonObject jsonGraph = new JsonObject();
         JsonArray jsonArrayNodes= new JsonArray();
         JsonArray jsonArrayEdges = new JsonArray();
-        jsonGraph.add("Nodes:", jsonArrayNodes);
-        jsonGraph.add("Edges:", jsonArrayEdges);
+        jsonGraph.add("Nodes", jsonArrayNodes);
+        jsonGraph.add("Edges", jsonArrayEdges);
         for (node_data node: myGraph.getV()) {
             JsonObject jsonNode= new JsonObject();
-            jsonNode.addProperty("key:", node.getKey());
-            jsonNode.addProperty("geo_location:",""+node.getLocation().x()+","+node.getLocation().y()+","+node.getLocation().z()+"");
+            jsonNode.addProperty("id", node.getKey());
+            jsonNode.addProperty("pos",""+node.getLocation().x()+","+node.getLocation().y()+","+node.getLocation().z()+"");
             jsonArrayNodes.add(jsonNode);
 
             for (edge_data edge_data:myGraph.getE(node.getKey())) {
                 JsonObject JsonEdge = new JsonObject();
-                JsonEdge.addProperty("src:",edge_data.getSrc());
-                JsonEdge.addProperty("dest:",edge_data.getDest());
-                JsonEdge.addProperty("weight:",edge_data.getWeight());
+                JsonEdge.addProperty("src",edge_data.getSrc());
+                JsonEdge.addProperty("dest",edge_data.getDest());
+                JsonEdge.addProperty("w",edge_data.getWeight());
                 jsonArrayEdges.add(JsonEdge);
 
             }
@@ -241,18 +242,18 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 
         directed_weighted_graph graph= new DS_DWGraph();
 
-        JsonArray jsonArrayNodes= json.getAsJsonArray("Nodes:");
-        JsonArray jsonArrayEdges= json.getAsJsonArray("Edges:");
+        JsonArray jsonArrayNodes= json.getAsJsonArray("Nodes");
+        JsonArray jsonArrayEdges= json.getAsJsonArray("Edges");
             for (JsonElement jsoneNode:jsonArrayNodes) {
-                String [] geo_location= ((JsonObject)jsoneNode).get("geo_location:").getAsString().split(",");
+                String [] geo_location= ((JsonObject)jsoneNode).get("pos").getAsString().split(",");
                 geo_location gl = new GeoLocation(Double.parseDouble(geo_location[0]),Double.parseDouble(geo_location[1]),Double.parseDouble(geo_location[2]));
-                node_data node= new NodeData(((JsonObject)jsoneNode).get("key:").getAsInt());
+                node_data node= new NodeData(((JsonObject)jsoneNode).get("id").getAsInt());
                 node.setLocation(gl);
                 graph.addNode(node);
             }
             for (JsonElement jsonEdge: jsonArrayEdges){
-                graph.connect(((JsonObject)jsonEdge).get("src:").getAsInt(),((JsonObject)jsonEdge).get("dest:").getAsInt(),
-                ((JsonObject)jsonEdge).get("weight:").getAsDouble());
+                graph.connect(((JsonObject)jsonEdge).get("src").getAsInt(),((JsonObject)jsonEdge).get("dest").getAsInt(),
+                ((JsonObject)jsonEdge).get("w").getAsDouble());
 
             }
 
@@ -288,34 +289,5 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     }
 
 
-    public static void main(String[] args){
 
-
-        DS_DWGraph graph= new DS_DWGraph();
-        for (int i=0 ; i<4;i++)
-            graph.addNode(new NodeData(i));
-        graph.connect(0,1,0);
-        graph.connect(1,2,0);
-        graph.connect(2,0,0);
-
-
-
-
-        //graph.removeNode(3);
-
-
-      //  System.out.println(graph.getE(0));
-        DWGraph_Algo graph_algo= new DWGraph_Algo();
-        graph_algo.init(graph);
-     graph_algo.save("graph.json");
-    graph_algo.load("graph.json");
-        //System.out.println(graph_algo.isConnected());
-        System.out.println(graph.equals(graph_algo.getGraph()));
-
-
-
-
-
-
-    }
 }

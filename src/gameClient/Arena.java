@@ -1,9 +1,6 @@
 package gameClient;
 
-import api.directed_weighted_graph;
-import api.edge_data;
-import api.geo_location;
-import api.node_data;
+import api.*;
 import gameClient.util.Point3D;
 import gameClient.util.Range;
 import gameClient.util.Range2D;
@@ -29,8 +26,10 @@ public class Arena {
 	private List<String> _info;
 	private static Point3D MIN = new Point3D(0, 100,0);
 	private static Point3D MAX = new Point3D(0, 100,0);
+	private game_service game;
 
-	public Arena() {;
+	public Arena() {
+
 		_info = new ArrayList<String>();
 	}
 	private Arena(directed_weighted_graph g, List<CL_Agent> r, List<CL_Pokemon> p) {
@@ -67,19 +66,32 @@ public class Arena {
 	public List<CL_Agent> getAgents() {return _agents;}
 	public List<CL_Pokemon> getPokemons() {return _pokemons;}
 
-	
+	public game_service getGame() {
+		return game;
+	}
+
+	public void setGame(game_service game) {
+		this.game = game;
+	}
+
 	public directed_weighted_graph getGraph() {
 		return _gg;
 	}
+
 	public List<String> get_info() {
 		return _info;
 	}
-	public void set_info(List<String> _info) {
-		this._info = _info;
+	public void set_info() {
+		long timeToEnd= game.timeToEnd();
+
+		List<String>l=new ArrayList<>();
+		l.add(timeToEnd+"");
+
+		this._info = l;
 	}
 
 	////////////////////////////////////////////////////
-	public static List<CL_Agent> getAgents(String aa, directed_weighted_graph gg) {
+	public static ArrayList<CL_Agent> getAgents(String aa, directed_weighted_graph gg) {
 		ArrayList<CL_Agent> ans = new ArrayList<CL_Agent>();
 		try {
 			JSONObject ttt = new JSONObject(aa);

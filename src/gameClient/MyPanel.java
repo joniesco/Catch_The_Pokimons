@@ -52,11 +52,17 @@ public class MyPanel extends JPanel{
 		
 	}
 	private void drawInfo(Graphics g) {
+
+		_ar.set_info();
 		List<String> str = _ar.get_info();
-		String dt = "none";
-		for(int i=0;i<str.size();i++) {
-			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
-		}
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+		g.drawString("time to end:"+ Integer.parseInt(str.get(0))/1000,100,60+20);
+
+//		String dt = "none";
+//		for(int i=0;i<str.size();i++) {
+//			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
+//		}
 		
 	}
 	private void drawGraph(Graphics g) {
@@ -99,7 +105,7 @@ public class MyPanel extends JPanel{
 	private void drawAgants(Graphics g) {
 		List<CL_Agent> rs = _ar.getAgents();
 	//	Iterator<OOP_Point3D> itr = rs.iterator();
-		g.setColor(Color.red);
+
 		int i=0;
 		while(rs!=null && i<rs.size()) {
 			geo_location c = rs.get(i).getLocation();
@@ -108,6 +114,9 @@ public class MyPanel extends JPanel{
 			if(c!=null) {
 
 				geo_location fp = this._w2f.world2frame(c);
+				g.setColor(Color.black);
+				g.drawString((int)rs.get(i-1).getValue()+"",(int)fp.x()-r, (int)fp.y()-r);
+				g.setColor(Color.red);
 				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
 			}
 		}

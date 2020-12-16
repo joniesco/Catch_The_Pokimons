@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class EdgeData implements edge_data {
 
-    int src;
-    int dst;
-    double weight;
+    int src;//will represent the node source of the edge
+    int dst;//will represent the node destination of the edge
+    double weight;//will represent the weight of the edge
     String info;
     int tag;
 
@@ -18,13 +18,13 @@ public class EdgeData implements edge_data {
                 ", weight=" + weight +
                 '}';
     }
-
+//constructor
     public EdgeData(int src, int dst, double weight) {
         this.src = src;
         this.dst = dst;
         this.weight=Math.abs(weight);
     }
-
+//getters and setters :
     @Override
     public int getSrc() {
         return this.src;
@@ -63,6 +63,7 @@ public class EdgeData implements edge_data {
     }
 
     @Override
+    // a method that checks if 2 edges are the same
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
