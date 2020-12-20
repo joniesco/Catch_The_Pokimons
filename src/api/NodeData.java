@@ -88,7 +88,7 @@ public class NodeData implements node_data {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NodeData nodeData = (NodeData) o;
-        return key == nodeData.key &&Objects.equals(info, nodeData.info);
+        return key == nodeData.key ;
     }
 
 }

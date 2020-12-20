@@ -20,11 +20,12 @@ public class DS_DWGraph implements directed_weighted_graph {
     //copy constructor
     public DS_DWGraph(directed_weighted_graph g){
         myNodes= new HashMap<>();
+        OutEdges=new HashMap<>();
+        InEdges=new HashMap<>();
         for (node_data n:g.getV() ) {
             addNode(new NodeData(n));
         }
-        OutEdges=new HashMap<>();
-        InEdges=new HashMap<>();
+
         for(node_data n: g.getV()){
             for (edge_data e:g.getE(n.getKey())) {
                 connect(n.getKey(),e.getDest(),e.getWeight());
